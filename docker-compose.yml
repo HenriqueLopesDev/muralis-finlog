@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres
+
+    container_name: finlog-db
+
+    ports:
+      - 5432:5432
+
+    environment:
+      POSTGRES_DB: finlog
+      POSTGRES_USER: finlog
+      POSTGRES_PASSWORD: abc12345
+
+networks:
+  finlog:
+    driver: bridge
