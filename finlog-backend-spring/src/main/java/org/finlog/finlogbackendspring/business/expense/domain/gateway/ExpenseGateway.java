@@ -7,4 +7,6 @@ import java.util.List;
 public interface ExpenseGateway {
 
     List<Expense> findAllExpenses();
+    Expense findExpenseById(Long id);
+    void updateExpense(Expense expense);
 }
