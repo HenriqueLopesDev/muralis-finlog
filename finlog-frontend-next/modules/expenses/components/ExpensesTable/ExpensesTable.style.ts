@@ -1,4 +1,16 @@
-import { styled, TableCell, tableCellClasses, TableRow } from '@mui/material'
+import {
+  styled,
+  SxProps,
+  TableCell,
+  tableCellClasses,
+  TableRow,
+  Theme,
+} from '@mui/material'
+
+export const TableContainerStyles: SxProps<Theme> = {
+  borderTopLeftRadius: 12,
+  borderTopRightRadius: 12,
+}
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -12,12 +24,6 @@ export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
     padding: '10px 5px',
     fontFamily: 'var(--font-poppins)',
-  },
-  '&:first-of-type': {
-    borderTopLeftRadius: '12px',
-  },
-  '&:last-of-type': {
-    borderTopRightRadius: '12px',
   },
 }))
 
