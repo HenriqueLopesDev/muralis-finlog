@@ -17,6 +17,6 @@ public class ExpenseService {
     }
 
     public List<ExpenseListDto> getAllExpenses() {
-        return findAllExpenses.execute().stream().map(ExpenseMapper::toDto).toList();
+        return findAllExpenses.execute().stream().map(new ExpenseMapper()::toDto).toList();
     }
 }
