@@ -15,7 +15,6 @@ const expensesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (response: SuccessResponse<Expense[]>) =>
         response.data.map((expense) => expensesMapper.map(expense)),
-      transformErrorResponse: () => null,
     }),
   }),
 })
