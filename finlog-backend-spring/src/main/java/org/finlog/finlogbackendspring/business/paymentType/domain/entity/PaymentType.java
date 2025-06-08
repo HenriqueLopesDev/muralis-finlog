@@ -1,8 +1,8 @@
 package org.finlog.finlogbackendspring.business.paymentType.domain.entity;
 
-public class PaymentType {
+import org.finlog.finlogbackendspring.config.entity.DomainEntity;
 
-    private Long id;
+public class PaymentType extends DomainEntity {
 
     private String type;
 
@@ -10,16 +10,8 @@ public class PaymentType {
     }
 
     public PaymentType(Long id, String type) {
-        this.id = id;
-        this.type = type;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        super(id);
+        this.setType(type);
     }
 
     public String getType() {

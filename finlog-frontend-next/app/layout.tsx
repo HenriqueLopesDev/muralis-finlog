@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Montserrat, Poppins } from 'next/font/google'
 import './globals.css'
+import StoreProvider from '@/common/lib/redux/StoreProvider'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -32,15 +34,19 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${poppins.variable} px-18 py-16  flex items-center justify-center`}
       >
-        <main
-          style={{
-            boxShadow:
-              'rgb(145, 158, 171, 0.04) 0px 0px 5px 0px, rgb(145, 158, 171, 0.22) 0px 12px 24px -4px',
-          }}
-          className="p-8 bg-gray-100 rounded-md w-full h-full min-h-[820px] flex"
-        >
-          {children}
-        </main>
+        <StoreProvider>
+          <AppRouterCacheProvider>
+            <main
+              style={{
+                boxShadow:
+                  'rgb(145, 158, 171, 0.04) 0px 0px 5px 0px, rgb(145, 158, 171, 0.22) 0px 12px 24px -4px',
+              }}
+              className="p-8 bg-gray-100 rounded-md w-full h-full min-h-[820px] flex"
+            >
+              {children}
+            </main>
+          </AppRouterCacheProvider>
+        </StoreProvider>
       </body>
     </html>
   )

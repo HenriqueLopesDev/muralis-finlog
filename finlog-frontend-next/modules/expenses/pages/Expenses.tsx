@@ -6,8 +6,16 @@ import { BaseInput } from '@/common/components/BaseInput/BaseInput'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { BaseButton } from '@/common/components/BaseButton/BaseButton'
 import { MainPagination } from '@/common/components/BasePagination/BasePagination'
+import { useGetExpensesQuery } from '@/modules/expenses/lib/redux/ExpensesApiSlice'
+import { LoadingSpinner } from '@/common/components/LoadingSpinner/LoadingSpinner'
 
 export function Expenses() {
+  const { data: expenses, isFetching } = useGetExpensesQuery()
+
+  if (isFetching) {
+    return <LoadingSpinner />
+  }
+
   return (
     <div className="flex flex-col justify-between w-full">
       <div className="flex flex-col gap-3">
@@ -32,7 +40,7 @@ export function Expenses() {
           </BaseButton>
         </div>
         <div>
-          <ExpensesTable />
+          <ExpensesTable rows={expenses ?? []} />
         </div>
       </div>
       <div className=" flex justify-end">
