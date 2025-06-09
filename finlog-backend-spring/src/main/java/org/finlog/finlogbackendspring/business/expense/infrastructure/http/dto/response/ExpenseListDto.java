@@ -1,4 +1,4 @@
-package org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto;
+package org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.finlog.finlogbackendspring.business.address.domain.entity.Address;

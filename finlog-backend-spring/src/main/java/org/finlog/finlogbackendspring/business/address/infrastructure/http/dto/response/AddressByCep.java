@@ -1,4 +1,4 @@
-package org.finlog.finlogbackendspring.business.address.infrastructure.http.dto;
+package org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.response;
 
 public record AddressByCep(
         String zipCode,

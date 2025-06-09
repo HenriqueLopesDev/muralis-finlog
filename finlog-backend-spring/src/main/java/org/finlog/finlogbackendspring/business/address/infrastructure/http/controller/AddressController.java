@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.finlog.finlogbackendspring.business.address.application.AddressService;
-import org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.AddressByCep;
+import org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.response.AddressByCep;
 import org.finlog.finlogbackendspring.config.http.response.ErrorResponse;
 import org.finlog.finlogbackendspring.config.http.response.SuccessResponse;
 import org.springframework.http.ResponseEntity;

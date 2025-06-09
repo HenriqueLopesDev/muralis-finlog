@@ -3,7 +3,7 @@ package org.finlog.finlogbackendspring.business.address.infrastructure.http.exte
 import org.finlog.finlogbackendspring.business.address.domain.entity.Address;
 import org.finlog.finlogbackendspring.business.address.domain.exception.CepNotFoundException;
 import org.finlog.finlogbackendspring.business.address.domain.gateway.AddressApiGateway;
-import org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.ViaCepResponse;
+import org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.response.ViaCepResponse;
 import org.finlog.finlogbackendspring.config.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestClientException;

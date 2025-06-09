@@ -2,7 +2,6 @@ package org.finlog.finlogbackendspring.business.expense.domain.useCase;
 
 import org.finlog.finlogbackendspring.business.expense.domain.entity.Expense;
 import org.finlog.finlogbackendspring.business.expense.domain.gateway.ExpenseGateway;
-import org.finlog.finlogbackendspring.business.expense.domain.mapper.ExpenseMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
