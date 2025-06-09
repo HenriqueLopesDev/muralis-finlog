@@ -44,8 +44,8 @@ public class FindAllExpensesTest {
         );
 
         List<Expense> expenses = List.of(
-                new Expense(1L, "Gas Station", BigDecimal.valueOf(100.00), LocalDateTime.now(), paymentType, category, address),
-                new Expense(2L, "Uber Ride", BigDecimal.valueOf(50.00), LocalDateTime.now(), paymentType, category, address)
+                new Expense(1L, "Gas Station", BigDecimal.valueOf(100.00), LocalDateTime.now(), paymentType, category, address, true),
+                new Expense(2L, "Uber Ride", BigDecimal.valueOf(50.00), LocalDateTime.now(), paymentType, category, address, true)
         );
 
         when(this.expenseGateway.findAllExpenses()).thenReturn(expenses);
