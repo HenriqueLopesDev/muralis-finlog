@@ -1,4 +1,4 @@
-package org.finlog.finlogbackendspring.config.entity;
+package org.finlog.finlogbackendspring.config.domain.entity;
 
 public abstract class DomainEntity {
 

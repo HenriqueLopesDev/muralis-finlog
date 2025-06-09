@@ -7,10 +7,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.finlog.finlogbackendspring.business.expense.application.service.ExpenseService;
-import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.ExpenseListDto;
+import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.request.ExpenseCreateRequest;
+import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.response.ExpenseListDto;
 import org.finlog.finlogbackendspring.config.http.response.ErrorResponse;
 import org.finlog.finlogbackendspring.config.http.response.SuccessResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +35,21 @@ public class ExpenseController {
     public ResponseEntity<SuccessResponse<List<ExpenseListDto>>> getAllExpenses() {
         return ResponseEntity.ok().body(
                 new SuccessResponse<>(this.expenseService.getAllExpenses())
+        );
+    }
+
+    @PostMapping()
+    @Operation(summary = "Create a new expense", description = "Creates a new expense with the provided details.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Expense created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public ResponseEntity<SuccessResponse<Long>> createExpense(@Valid @RequestBody ExpenseCreateRequest expenseCreateRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new SuccessResponse<>(
+                        this.expenseService.createExpense(expenseCreateRequest)
+                )
         );
     }
 

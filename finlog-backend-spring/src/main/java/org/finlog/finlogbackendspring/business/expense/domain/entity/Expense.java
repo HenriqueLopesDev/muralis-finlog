@@ -3,7 +3,7 @@ package org.finlog.finlogbackendspring.business.expense.domain.entity;
 import org.finlog.finlogbackendspring.business.address.domain.entity.Address;
 import org.finlog.finlogbackendspring.business.category.domain.entity.Category;
 import org.finlog.finlogbackendspring.business.paymentType.domain.entity.PaymentType;
-import org.finlog.finlogbackendspring.config.entity.DomainEntity;
+import org.finlog.finlogbackendspring.config.domain.entity.DomainEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

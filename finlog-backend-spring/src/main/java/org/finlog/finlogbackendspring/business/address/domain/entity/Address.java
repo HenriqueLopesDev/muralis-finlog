@@ -1,6 +1,6 @@
 package org.finlog.finlogbackendspring.business.address.domain.entity;
 
-import org.finlog.finlogbackendspring.config.entity.DomainEntity;
+import org.finlog.finlogbackendspring.config.domain.entity.DomainEntity;
 
 import java.util.Optional;
 

@@ -60,6 +60,20 @@ public class ExpenseRepository implements ExpenseGateway {
                 expense.getId());
     }
 
+    public Long saveExpense(Expense expense) {
+        String sql = "INSERT INTO expenses (exp_value, exp_description, exp_date, exp_cat_id, exp_pmt_id, exp_adr_id, exp_active) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING exp_id";
+
+        return jdbcTemplate.queryForObject(sql, Long.class,
+                expense.getValue(),
+                expense.getDescription(),
+                expense.getDate(),
+                expense.getCategory().getId(),
+                expense.getPaymentType().getId(),
+                expense.getAddress().getId(),
+                expense.getActive());
+    }
+
     private final RowMapper<Expense> expenseRowMapper = (rs, rowNum) -> {
         Expense expense = new Expense();
         expense.setId(rs.getLong("exp_id"));

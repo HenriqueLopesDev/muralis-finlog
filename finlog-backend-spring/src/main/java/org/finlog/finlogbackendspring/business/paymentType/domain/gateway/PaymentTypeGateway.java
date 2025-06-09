@@ -7,4 +7,5 @@ import java.util.List;
 public interface PaymentTypeGateway {
 
     List<PaymentType> findAllPaymentTypes();
+    PaymentType findPaymentTypeById(Long id);
 }
