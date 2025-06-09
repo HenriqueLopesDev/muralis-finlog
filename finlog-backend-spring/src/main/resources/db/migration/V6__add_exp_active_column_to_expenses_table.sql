@@ -1,0 +1,2 @@
+ALTER TABLE expenses
+    ADD COLUMN exp_active BOOLEAN NOT NULL DEFAULT TRUE;

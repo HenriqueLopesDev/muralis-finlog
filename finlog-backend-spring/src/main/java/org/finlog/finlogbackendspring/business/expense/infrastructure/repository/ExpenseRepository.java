@@ -5,6 +5,7 @@ import org.finlog.finlogbackendspring.business.category.domain.entity.Category;
 import org.finlog.finlogbackendspring.business.expense.domain.entity.Expense;
 import org.finlog.finlogbackendspring.business.expense.domain.gateway.ExpenseGateway;
 import org.finlog.finlogbackendspring.business.paymentType.domain.entity.PaymentType;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -28,8 +29,35 @@ public class ExpenseRepository implements ExpenseGateway {
                 "ON expenses.exp_cat_id = categories.cat_id " +
                 "JOIN payment_types " +
                 "ON expenses.exp_pmt_id = payment_types.pmt_id " +
-                "JOIN addresses ON expenses.exp_adr_id = addresses.adr_id";
+                "JOIN addresses ON expenses.exp_adr_id = addresses.adr_id " +
+                "WHERE exp_active = true";
         return jdbcTemplate.query(sql, this.expenseRowMapper);
+    }
+
+    public Expense findExpenseById(Long id) throws DataAccessException {
+        String sql = "SELECT *, categories, payment_types, addresses " +
+                "FROM expenses " +
+                "JOIN categories ON expenses.exp_cat_id = categories.cat_id " +
+                "JOIN payment_types ON expenses.exp_pmt_id = payment_types.pmt_id " +
+                "JOIN addresses ON expenses.exp_adr_id = addresses.adr_id " +
+                "WHERE exp_id = ? AND exp_active = true";
+
+        return jdbcTemplate.queryForObject(sql, this.expenseRowMapper, id);
+    }
+
+    public void updateExpense(Expense expense) {
+        String sql = "UPDATE expenses SET exp_value = ?, exp_description = ?, exp_date = ?, exp_cat_id = ?, exp_pmt_id = ?, exp_adr_id = ?, exp_active = ? " +
+                "WHERE exp_id = ?";
+
+        jdbcTemplate.update(sql,
+                expense.getValue(),
+                expense.getDescription(),
+                expense.getDate(),
+                expense.getCategory().getId(),
+                expense.getPaymentType().getId(),
+                expense.getAddress().getId(),
+                expense.getActive(),
+                expense.getId());
     }
 
     private final RowMapper<Expense> expenseRowMapper = (rs, rowNum) -> {

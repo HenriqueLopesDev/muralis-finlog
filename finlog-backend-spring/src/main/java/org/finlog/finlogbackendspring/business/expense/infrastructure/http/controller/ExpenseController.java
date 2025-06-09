@@ -1,14 +1,18 @@
 package org.finlog.finlogbackendspring.business.expense.infrastructure.http.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.finlog.finlogbackendspring.business.expense.application.service.ExpenseService;
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.ExpenseListDto;
+import org.finlog.finlogbackendspring.config.http.response.ErrorResponse;
 import org.finlog.finlogbackendspring.config.http.response.SuccessResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,9 +29,23 @@ public class ExpenseController {
 
     @GetMapping()
     @Operation(summary = "Get all expenses", description = "Retrieves a list of all recorded expenses.")
-    public ResponseEntity<SuccessResponse<List<ExpenseListDto>>> getAllExpenses(){
+    public ResponseEntity<SuccessResponse<List<ExpenseListDto>>> getAllExpenses() {
         return ResponseEntity.ok().body(
                 new SuccessResponse<>(this.expenseService.getAllExpenses())
         );
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete an expense", description = "Deletes a specific expense by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Expense deleted successfully",
+                    content = @Content(schema = @Schema(implementation = SuccessResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Expense not found",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public ResponseEntity<Void> deleteExpense(@Parameter(name = "id", description = "ID of the expense to delete", example = "123", required = true)
+                                                               @PathVariable Long id) {
+        this.expenseService.deleteExpense(id);
+        return ResponseEntity.noContent().build();
     }
 }

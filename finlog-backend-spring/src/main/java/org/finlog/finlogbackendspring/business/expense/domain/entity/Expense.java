@@ -13,6 +13,7 @@ public class Expense extends DomainEntity {
     private String description;
     private BigDecimal value;
     private LocalDateTime date;
+    private boolean active;
     private PaymentType paymentType;
     private Category category;
     private Address address;
@@ -20,11 +21,12 @@ public class Expense extends DomainEntity {
     public Expense() {
     }
 
-    public Expense(Long id, String description, BigDecimal value, LocalDateTime date, PaymentType paymentType, Category category, Address address) {
+    public Expense(Long id, String description, BigDecimal value, LocalDateTime date, PaymentType paymentType, Category category, Address address, boolean active) {
         super(id);
         this.setDescription(description);
         this.setValue(value);
         this.setDate(date);
+        this.setActive(active);
         this.setPaymentType(paymentType);
         this.setCategory(category);
         this.setAddress(address);
@@ -52,6 +54,14 @@ public class Expense extends DomainEntity {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public boolean getActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public PaymentType getPaymentType() {

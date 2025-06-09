@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ExpenseTest {
 
@@ -18,6 +19,7 @@ public class ExpenseTest {
     private static final String DEFAULT_DESCRIPTION = "Gasoline";
     private static final BigDecimal DEFAULT_VALUE = BigDecimal.valueOf(50.00);
     private static final LocalDateTime DEFAULT_DATE = LocalDateTime.of(2025, 6, 7, 18, 30);
+    private static final boolean DEFAULT_ACTIVE = true;
 
     private PaymentType paymentType;
     private Category category;
@@ -47,6 +49,7 @@ public class ExpenseTest {
         expense.setDescription(DEFAULT_DESCRIPTION);
         expense.setValue(DEFAULT_VALUE);
         expense.setDate(DEFAULT_DATE);
+        expense.setActive(DEFAULT_ACTIVE);
         expense.setPaymentType(paymentType);
         expense.setCategory(category);
         expense.setAddress(address);
@@ -55,6 +58,7 @@ public class ExpenseTest {
         assertEquals(DEFAULT_DESCRIPTION, expense.getDescription());
         assertEquals(DEFAULT_VALUE, expense.getValue());
         assertEquals(DEFAULT_DATE, expense.getDate());
+        assertTrue(expense.getActive());
         assertEquals(paymentType, expense.getPaymentType());
         assertEquals(category, expense.getCategory());
         assertEquals(address, expense.getAddress());
@@ -69,7 +73,8 @@ public class ExpenseTest {
                 DEFAULT_DATE,
                 paymentType,
                 category,
-                address
+                address,
+                DEFAULT_ACTIVE
         );
 
         assertEquals(DEFAULT_ID, expense.getId());
@@ -79,5 +84,6 @@ public class ExpenseTest {
         assertEquals(paymentType, expense.getPaymentType());
         assertEquals(category, expense.getCategory());
         assertEquals(address, expense.getAddress());
+        assertTrue(expense.getActive());
     }
 }

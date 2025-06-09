@@ -44,13 +44,13 @@ public class FindAllExpensesTest {
         );
 
         List<Expense> expenses = List.of(
-                new Expense(1L, "Gas Station", BigDecimal.valueOf(100.00), LocalDateTime.now(), paymentType, category, address),
-                new Expense(2L, "Uber Ride", BigDecimal.valueOf(50.00), LocalDateTime.now(), paymentType, category, address)
+                new Expense(1L, "Gas Station", BigDecimal.valueOf(100.00), LocalDateTime.now(), paymentType, category, address, true),
+                new Expense(2L, "Uber Ride", BigDecimal.valueOf(50.00), LocalDateTime.now(), paymentType, category, address, true)
         );
 
         when(this.expenseGateway.findAllExpenses()).thenReturn(expenses);
 
-        List<Expense> result = findAllExpenses.execute();
+        List<Expense> result = this.findAllExpenses.execute();
 
         assertEquals(2, result.size());
         assertNotNull(result);
@@ -62,7 +62,7 @@ public class FindAllExpensesTest {
     void shouldReturnEmptyListWhenNoExpensesFound() {
         when(this.expenseGateway.findAllExpenses()).thenReturn(List.of());
 
-        List<Expense> result = findAllExpenses.execute();
+        List<Expense> result = this.findAllExpenses.execute();
 
         assertTrue(result.isEmpty());
         verify(this.expenseGateway, times(1)).findAllExpenses();
