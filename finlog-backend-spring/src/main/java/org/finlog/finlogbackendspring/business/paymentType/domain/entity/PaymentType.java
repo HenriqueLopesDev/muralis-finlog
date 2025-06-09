@@ -1,6 +1,6 @@
 package org.finlog.finlogbackendspring.business.paymentType.domain.entity;
 
-import org.finlog.finlogbackendspring.config.entity.DomainEntity;
+import org.finlog.finlogbackendspring.config.domain.entity.DomainEntity;
 
 public class PaymentType extends DomainEntity {
 
