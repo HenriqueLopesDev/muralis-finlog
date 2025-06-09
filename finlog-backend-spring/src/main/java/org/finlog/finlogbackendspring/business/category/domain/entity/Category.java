@@ -1,6 +1,6 @@
 package org.finlog.finlogbackendspring.business.category.domain.entity;
 
-import org.finlog.finlogbackendspring.config.entity.DomainEntity;
+import org.finlog.finlogbackendspring.config.domain.entity.DomainEntity;
 
 public class Category extends DomainEntity {
 
