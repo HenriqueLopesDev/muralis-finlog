@@ -50,7 +50,7 @@ public class FindAllExpensesTest {
 
         when(this.expenseGateway.findAllExpenses()).thenReturn(expenses);
 
-        List<Expense> result = findAllExpenses.execute();
+        List<Expense> result = this.findAllExpenses.execute();
 
         assertEquals(2, result.size());
         assertNotNull(result);
@@ -62,7 +62,7 @@ public class FindAllExpensesTest {
     void shouldReturnEmptyListWhenNoExpensesFound() {
         when(this.expenseGateway.findAllExpenses()).thenReturn(List.of());
 
-        List<Expense> result = findAllExpenses.execute();
+        List<Expense> result = this.findAllExpenses.execute();
 
         assertTrue(result.isEmpty());
         verify(this.expenseGateway, times(1)).findAllExpenses();
