@@ -6,14 +6,44 @@ import { BaseInput } from '@/common/components/BaseInput/BaseInput'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { BaseButton } from '@/common/components/BaseButton/BaseButton'
 import { MainPagination } from '@/common/components/BasePagination/BasePagination'
-import { useGetExpensesQuery } from '@/modules/expenses/lib/redux/ExpensesApiSlice'
+import {
+  useDeleteExpenseMutation,
+  useGetExpensesQuery,
+} from '@/modules/expenses/lib/redux/ExpensesApiSlice'
 import { LoadingSpinner } from '@/common/components/LoadingSpinner/LoadingSpinner'
+import React from 'react'
+import { ActionAlert } from '@/common/utils/ActionAlert'
+import { DeleteExpenseModal } from '../components/DeleteExpenseModal/DeleteExpenseModal'
 
 export function Expenses() {
-  const { data: expenses, isFetching } = useGetExpensesQuery()
+  const { data: expenses, isLoading } = useGetExpensesQuery()
+  const [deleteExpenseMutation] = useDeleteExpenseMutation()
 
-  if (isFetching) {
+  const [deleteExpenseModalState, setDeleteExpenseModalState] = React.useState({
+    open: false,
+    expenseId: 0,
+  })
+
+  if (isLoading) {
     return <LoadingSpinner />
+  }
+
+  const handleDeleteExpense = async () => {
+    const { error } = await deleteExpenseMutation(
+      deleteExpenseModalState.expenseId,
+    )
+
+    if (error) {
+      return await ActionAlert.show({
+        icon: 'error',
+        title: 'Erro ao excluir despesa, tente novamente mais tarde.',
+      })
+    }
+
+    await ActionAlert.show({
+      icon: 'success',
+      title: 'Despesa excluída com sucesso!',
+    })
   }
 
   return (
@@ -40,7 +70,10 @@ export function Expenses() {
           </BaseButton>
         </div>
         <div>
-          <ExpensesTable rows={expenses ?? []} />
+          <ExpensesTable
+            rows={expenses ?? []}
+            deleteExpenseModalDispatcher={setDeleteExpenseModalState}
+          />
         </div>
       </div>
       <div className=" flex justify-end">
@@ -49,6 +82,11 @@ export function Expenses() {
           setPaginationData={() => {}}
         />
       </div>
+      <DeleteExpenseModal
+        open={deleteExpenseModalState}
+        setOpen={setDeleteExpenseModalState}
+        callBackFn={handleDeleteExpense}
+      />
     </div>
   )
 }

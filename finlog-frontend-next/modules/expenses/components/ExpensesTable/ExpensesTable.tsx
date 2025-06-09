@@ -14,9 +14,12 @@ import {
   TableContainerStyles,
 } from './ExpensesTable.style'
 import { formatCurrency, formatDate } from '@/common/utils/masks'
-import { ExpensesTableProps } from './ExpensesTable'
+import { ExpensesTableProps } from './ExpensesTableProps'
 
-export function ExpensesTable({ rows }: ExpensesTableProps) {
+export function ExpensesTable({
+  rows,
+  deleteExpenseModalDispatcher,
+}: ExpensesTableProps) {
   return (
     <TableContainer component={Paper} sx={TableContainerStyles}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -70,7 +73,14 @@ export function ExpensesTable({ rows }: ExpensesTableProps) {
                   <Dropdown.Item onClickCallback={() => null}>
                     Editar
                   </Dropdown.Item>
-                  <Dropdown.Item onClickCallback={() => null}>
+                  <Dropdown.Item
+                    onClickCallback={() =>
+                      deleteExpenseModalDispatcher({
+                        expenseId: row.id,
+                        open: true,
+                      })
+                    }
+                  >
                     Excluir
                   </Dropdown.Item>
                 </Dropdown.Root>
