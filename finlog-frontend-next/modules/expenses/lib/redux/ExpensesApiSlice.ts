@@ -15,8 +15,18 @@ const expensesApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (response: SuccessResponse<Expense[]>) =>
         response.data.map((expense) => expensesMapper.map(expense)),
+      providesTags: ['Expenses'],
+    }),
+
+    deleteExpense: builder.mutation<void, number>({
+      query: (expenseId) => ({
+        url: `/despesas/${expenseId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Expenses'],
     }),
   }),
 })
 
-export const { useGetExpensesQuery } = expensesApiSlice
+export const { useGetExpensesQuery, useDeleteExpenseMutation } =
+  expensesApiSlice
