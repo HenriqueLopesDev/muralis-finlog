@@ -1,4 +1,4 @@
-package org.finlog.finlogbackendspring.config.mapper;
+package org.finlog.finlogbackendspring.config.domain.mapper;
 
 public interface Mapper<baseEntity, mappedEntity> {
 

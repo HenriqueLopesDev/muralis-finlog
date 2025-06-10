@@ -3,7 +3,7 @@ package org.finlog.finlogbackendspring.business.expense.domain.mapper;
 import org.finlog.finlogbackendspring.business.category.infrastructure.dto.CategorySummaryDto;
 import org.finlog.finlogbackendspring.business.expense.domain.entity.Expense;
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.response.ExpenseListDto;
-import org.finlog.finlogbackendspring.config.mapper.Mapper;
+import org.finlog.finlogbackendspring.config.domain.mapper.Mapper;
 
 public class ExpenseToExpenseList implements Mapper<Expense, ExpenseListDto> {
 
