@@ -77,7 +77,7 @@ O projeto foi desenvolvido majoritariamente em inglês, com exceção elementos 
 ---
 
 ### Resultados do Lighthouse
-A aplicação foi avaliada com a ferramenta Lighthouse, que analisa critérios como performance, acessibilidade, boas práticas e SEO. Os resultados a seguir foram obtidos a partir de uma execução local 
+A aplicação foi avaliada com a ferramenta Lighthouse, que analisa critérios como performance, acessibilidade, boas práticas e SEO. Os resultados a seguir foram obtidos a partir de uma execução local: 
 
 #### Desktop
 
