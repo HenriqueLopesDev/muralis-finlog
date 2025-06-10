@@ -15,11 +15,15 @@ import React from 'react'
 import { ActionAlert } from '@/common/utils/ActionAlert'
 import { DeleteExpenseModal } from '../components/DeleteExpenseModal/DeleteExpenseModal'
 import { CreateExpenseModal } from '../components/CreateExpenseModal/CreateExpenseModal'
+import { PaginationMeta } from '@/common/types/api/ApiResponse'
 
 export function Expenses() {
-  const { data: expenses, isLoading } = useGetExpensesQuery()
+  const [paginationData, setPaginationData] = React.useState<PaginationMeta>()
+  const { data: expenses, isLoading } = useGetExpensesQuery(paginationData?.currentPage ?? 1, {
+  refetchOnMountOrArgChange: true,
+  })
   const [deleteExpenseMutation] = useDeleteExpenseMutation()
-
+  
   const [deleteExpenseModalState, setDeleteExpenseModalState] = React.useState({
     open: false,
     expenseId: 0,
@@ -27,6 +31,12 @@ export function Expenses() {
 
   const [createExpenseModalState, setCreateExpenseModalState] =
     React.useState(false)
+
+  React.useEffect(() => {
+    if (expenses?.pagination) {
+      setPaginationData(expenses.pagination)
+    }
+  }, [expenses?.pagination])
 
   if (isLoading) {
     return <LoadingSpinner />
@@ -75,15 +85,15 @@ export function Expenses() {
         </div>
         <div>
           <ExpensesTable
-            rows={expenses ?? []}
+            rows={expenses?.content ?? []}
             deleteExpenseModalDispatcher={setDeleteExpenseModalState}
           />
         </div>
       </div>
       <div className=" flex justify-end">
         <MainPagination
-          pagination={{ last_page: 10, currentPage: 1 }}
-          setPaginationData={() => {}}
+          pagination={paginationData}
+          setPaginationData={setPaginationData}
         />
       </div>
       <DeleteExpenseModal

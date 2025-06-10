@@ -12,23 +12,23 @@ export function MainPagination({
     event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
-    setPaginationData((prev: unknown) => {
+    setPaginationData((prev) => {
       if (prev) {
-        return { ...prev, current_page: value }
+        return { ...prev, currentPage: value }
       }
       return prev
     })
   }
 
   return (
-    <div className="flex justify-end p-[0.7rem_0rem] max-[992px]:justify-center">
+    <div className="flex justify-end p-[0.6rem_0rem] max-[992px]:justify-center">
       <Pagination
-        count={pagination?.last_page}
+        count={pagination?.totalPages ?? 1}
         color="primary"
         showFirstButton
         showLastButton
         onChange={handleChangePage}
-        page={pagination?.currentPage}
+        page={pagination?.currentPage ?? 1}
         siblingCount={0}
         sx={PaginationStyles}
       />
