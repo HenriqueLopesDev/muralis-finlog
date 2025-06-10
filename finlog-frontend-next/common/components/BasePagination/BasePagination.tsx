@@ -1,13 +1,13 @@
 import React from 'react'
 
 import { Pagination } from '@mui/material'
-import { MainPaginationProps } from './BasePaginationProps'
 import { PaginationStyles } from './BasePagination.style'
+import { BasePaginationProps } from './BasePaginationProps'
 
-export function MainPagination({
+export function BasePagination({
   pagination,
   setPaginationData,
-}: MainPaginationProps) {
+}: BasePaginationProps) {
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
     value: number,
@@ -21,7 +21,7 @@ export function MainPagination({
   }
 
   return (
-    <div className="flex justify-end p-[0.6rem_0rem] max-[992px]:justify-center">
+    <div className="flex justify-end p-[0.6rem_0rem]">
       <Pagination
         count={pagination?.totalPages ?? 1}
         color="primary"
