@@ -15,3 +15,12 @@ export interface Expense {
 export type ExpenseList = Omit<Expense, 'category'> & {
   category: CategorySummary
 }
+
+export interface CreateExpenseRequest {
+  description: string
+  value: number
+  date: string
+  paymentTypeId: number
+  category: Omit<Category, 'id'>
+  address: Omit<Address, 'id'>
+}

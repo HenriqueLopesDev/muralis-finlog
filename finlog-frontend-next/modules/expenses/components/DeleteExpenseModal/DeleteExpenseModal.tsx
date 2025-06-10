@@ -5,7 +5,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import CloseIcon from '@mui/icons-material/Close'
 import { IconButton } from '@mui/material'
-import { DeleteExpenseModalProps } from './DeleteExpenseModal'
+import { DeleteExpenseModalProps } from './DeleteExpenseModalProps'
 
 export function DeleteExpenseModal({
   open,

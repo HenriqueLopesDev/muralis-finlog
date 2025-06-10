@@ -1,5 +1,5 @@
 import { apiSlice } from '@/common/lib/redux/apiSlice'
-import { Expense, ExpenseList } from '../../types/Expense'
+import { CreateExpenseRequest, Expense, ExpenseList } from '../../types/Expense'
 import { SuccessResponse } from '@/common/types/api/ApiResponse'
 import { ExpensesMapper } from '../../mappers/ExpensesMapper'
 
@@ -18,6 +18,15 @@ const expensesApiSlice = apiSlice.injectEndpoints({
       providesTags: ['Expenses'],
     }),
 
+    createExpense: builder.mutation<void, CreateExpenseRequest>({
+      query: (expense) => ({
+        url: '/despesas',
+        method: 'POST',
+        body: expense,
+      }),
+      invalidatesTags: ['Expenses'],
+    }),
+
     deleteExpense: builder.mutation<void, number>({
       query: (expenseId) => ({
         url: `/despesas/${expenseId}`,
@@ -28,5 +37,8 @@ const expensesApiSlice = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useGetExpensesQuery, useDeleteExpenseMutation } =
-  expensesApiSlice
+export const {
+  useGetExpensesQuery,
+  useDeleteExpenseMutation,
+  useCreateExpenseMutation,
+} = expensesApiSlice

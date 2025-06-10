@@ -13,7 +13,10 @@ import {
   StyledTableRow,
   TableContainerStyles,
 } from './ExpensesTable.style'
-import { formatCurrency, formatDate } from '@/common/utils/masks'
+import {
+  formatToBrazilianCurrency,
+  formatDateToBrazilianStandard,
+} from '@/common/utils/formatters'
 import { ExpensesTableProps } from './ExpensesTableProps'
 
 export function ExpensesTable({
@@ -36,12 +39,12 @@ export function ExpensesTable({
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <StyledTableRow key={row.description}>
+            <StyledTableRow key={row.id}>
               <StyledTableCell component="th" scope="row" align="center">
                 {row.description}
               </StyledTableCell>
               <StyledTableCell align="center">
-                {formatCurrency(row.value)}
+                {formatToBrazilianCurrency(row.value)}
               </StyledTableCell>
               <StyledTableCell align="center">
                 {row.paymentType.type}
@@ -53,7 +56,7 @@ export function ExpensesTable({
                 {`${row.address.street}, ${row.address.streetNumber}`}
               </StyledTableCell>
               <StyledTableCell align="center">
-                {formatDate(row.date)}
+                {formatDateToBrazilianStandard(row.date)}
               </StyledTableCell>
               <StyledTableCell align="center">
                 <Dropdown.Root
