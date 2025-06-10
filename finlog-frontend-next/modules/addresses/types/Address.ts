@@ -4,7 +4,6 @@ export interface Address {
   city: string
   state: string
   zipCode: string
-  country: string
   neighborhood: string
   complement?: string
 }
