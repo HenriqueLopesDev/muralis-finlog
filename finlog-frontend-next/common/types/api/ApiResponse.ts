@@ -12,8 +12,8 @@ export interface ErrorResponse extends BaseApiResponse {
 
 export interface PaginationMeta {
   currentPage: number
-  totalPages: number
-  totalItems: number
+  totalPages?: number
+  totalItems?: number
 }
 
 export interface PaginatedData<T> {

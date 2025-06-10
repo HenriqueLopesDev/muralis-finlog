@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Divider } from '@mui/material'
-import { CreateExpenseModalProps } from './CreateExpenseModalProps'
 import { BaseLabel } from '@/common/components/BaseLabel/BaseLabel'
 import { BaseInput } from '@/common/components/BaseInput/BaseInput'
 import { BaseSelect } from '@/common/components/BaseSelect/BaseSelect'
@@ -8,12 +7,16 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormValidationErrorMessage } from '@/common/components/FormValidationErrorMessage/FormValidationErrorMessage'
 import {
+  formatBrazilianZipCode,
   formatToBrazilianCurrency,
   removeNonNumericCharacters,
 } from '@/common/utils/formatters'
 import { useLazyGetPaymentTypesQuery } from '@/modules/paymentTypes/lib/redux/PaymentTypesApiSlice'
 import { ActionAlert } from '@/common/utils/ActionAlert'
-import { useCreateExpenseMutation } from '@/modules/expenses/lib/redux/ExpensesApiSlice'
+import {
+  useLazyGetExpenseByIdQuery,
+  useUpdateExpenseMutation,
+} from '@/modules/expenses/lib/redux/ExpensesApiSlice'
 import { CreateExpenseToCreateExpenseRequest } from '@/modules/expenses/mappers/CreateExpenseToCreateExpenseRequest'
 import {
   CreateExpenseFormData,
@@ -21,16 +24,21 @@ import {
 } from '@/modules/expenses/validation/createExpenseValidationSchema'
 import { useZipCode } from '../../hooks/useZipCode'
 import { getMaxLocalDate } from '@/common/utils/getMaxLocalDate'
+import { UpdateExpenseModalProps } from './UpdateExpenseModalProps'
 import { BaseModal } from '@/common/components/BaseModal/BaseModal'
 
-export function CreateExpenseModal({
-  createExpenseModalState,
-  setCreateExpenseModalState,
-}: CreateExpenseModalProps) {
+export function UpdateExpenseModal({
+  updateExpenseModalState,
+  setUpdateExpenseModalState,
+}: UpdateExpenseModalProps) {
   const [fetchPaymentTypes, { data: paymentTypes }] =
     useLazyGetPaymentTypesQuery()
+
+  const [fetchExpenseById, { data: foundExpense }] =
+    useLazyGetExpenseByIdQuery()
+
   const formRef = React.useRef<HTMLFormElement>(null)
-  const [createQuotation] = useCreateExpenseMutation()
+  const [updateQuotation] = useUpdateExpenseMutation()
 
   const hookFormMethods = useForm<CreateExpenseFormData>({
     resolver: zodResolver(createExpenseValidationSchema),
@@ -58,6 +66,23 @@ export function CreateExpenseModal({
     reset,
   } = hookFormMethods
 
+  const populateFormFields = React.useCallback(() => {
+    if (!foundExpense) return
+    setValue('description', foundExpense.description)
+    setValue('value', formatToBrazilianCurrency(foundExpense.value))
+    setValue('expenseDate', foundExpense.date)
+    setValue('paymentType', String(foundExpense.paymentType.id))
+    setValue('category', foundExpense.category.name)
+    setValue('categoryDescription', foundExpense.category.description)
+    setValue('cep', formatBrazilianZipCode(foundExpense.address.zipCode))
+    setValue('street', foundExpense.address.street)
+    setValue('streetNumber', foundExpense.address.streetNumber)
+    setValue('neighborhood', foundExpense.address.neighborhood)
+    setValue('city', foundExpense.address.city)
+    setValue('state', foundExpense.address.state)
+    setValue('complement', foundExpense.address.complement || '')
+  }, [foundExpense, setValue])
+
   const {
     addressLockedFields,
     setAllAddressFieldsLocked,
@@ -65,35 +90,45 @@ export function CreateExpenseModal({
   } = useZipCode(setValue)
 
   React.useEffect(() => {
-    if (createExpenseModalState) {
+    if (updateExpenseModalState.open && updateExpenseModalState.expenseId) {
       fetchPaymentTypes()
+      fetchExpenseById(updateExpenseModalState.expenseId)
+        .unwrap()
+        .then(() => populateFormFields())
     }
-  }, [createExpenseModalState, fetchPaymentTypes])
+  }, [
+    fetchExpenseById,
+    fetchPaymentTypes,
+    populateFormFields,
+    updateExpenseModalState.expenseId,
+    updateExpenseModalState.open,
+  ])
 
-  const handleCloseCreateExpenseModal = () => {
-    setCreateExpenseModalState(false)
+  const handleCloseUpdateExpenseMOdal = () => {
+    setUpdateExpenseModalState({ expenseId: undefined, open: false })
     setAllAddressFieldsLocked(false)
     reset()
   }
 
   const onSubmit = async (data: CreateExpenseFormData) => {
-    const { error } = await createQuotation(
-      new CreateExpenseToCreateExpenseRequest().map(data),
-    )
+    const { error } = await updateQuotation({
+      id: updateExpenseModalState.expenseId!,
+      data: new CreateExpenseToCreateExpenseRequest().map(data),
+    })
 
     if (error) {
       return ActionAlert.show({
         icon: 'error',
-        title: 'Erro ao criar a despesa, tente novamente mais tarde.',
+        title: 'Erro ao atualizar a despesa, tente novamente mais tarde.',
       })
     }
 
     ActionAlert.show({
       icon: 'success',
-      title: 'Despesa criada com sucesso!',
+      title: 'Despesa atualizada com sucesso!',
     })
 
-    handleCloseCreateExpenseModal()
+    handleCloseUpdateExpenseMOdal()
   }
 
   const formatCurrentyInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,10 +139,10 @@ export function CreateExpenseModal({
 
   return (
     <BaseModal
-      open={createExpenseModalState}
-      onClose={handleCloseCreateExpenseModal}
+      open={updateExpenseModalState.open}
+      onClose={handleCloseUpdateExpenseMOdal}
       maxWidth="md"
-      title="Nova despesa"
+      title="Atualizar despesa"
     >
       <FormProvider {...hookFormMethods}>
         <form onSubmit={handleSubmit(onSubmit)} ref={formRef}>
@@ -339,7 +374,7 @@ export function CreateExpenseModal({
             <button
               className="h-10 border border-[var(--color-01)] hover:cursor-pointer flex items-center justify-center gap-1 rounded-[10px] bg-transparent px-3 py-2 font-poppins font-semibold text-[var(--color-01)] transition-colors duration-200 hover:bg-[var(--color-02)] hover:text-white"
               type="button"
-              onClick={handleCloseCreateExpenseModal}
+              onClick={handleCloseUpdateExpenseMOdal}
             >
               Cancelar
             </button>
@@ -347,7 +382,7 @@ export function CreateExpenseModal({
               className="hover:cursor-pointer flex items-center justify-center gap-1 rounded-[10px] bg-[var(--color-01)] px-3 py-2 font-poppins font-semibold text-white transition-colors duration-200 hover:bg-[var(--color-02)]"
               type="submit"
             >
-              Cadastrar
+              Atualizar
             </button>
           </div>
         </form>

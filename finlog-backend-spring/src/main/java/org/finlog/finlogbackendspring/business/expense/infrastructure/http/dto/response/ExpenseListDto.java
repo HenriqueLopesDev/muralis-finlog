@@ -6,13 +6,14 @@ import org.finlog.finlogbackendspring.business.category.infrastructure.dto.Categ
 import org.finlog.finlogbackendspring.business.paymentType.domain.entity.PaymentType;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ExpenseListDto (
     Long id,
     String description,
     BigDecimal value,
-    LocalDateTime date,
+    LocalDate date,
     PaymentType paymentType,
     @JsonProperty("category") CategorySummaryDto categorySummaryDto,
     Address address

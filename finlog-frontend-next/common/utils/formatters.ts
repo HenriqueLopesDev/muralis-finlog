@@ -1,5 +1,7 @@
 export function formatDateToBrazilianStandard(date: string): string {
-  return new Intl.DateTimeFormat('pt-BR').format(new Date(date))
+  const [year, month, day] = date.split('-')
+  const dateType = new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+  return new Intl.DateTimeFormat('pt-BR').format(dateType)
 }
 
 export function formatToBrazilianCurrency(

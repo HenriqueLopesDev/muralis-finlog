@@ -29,6 +29,22 @@ public class AddressRepository implements AddressGateway {
         );
     }
 
+    @Override
+    public Void updateAddress(Address address) {
+        String sql = "UPDATE addresses SET adr_zip_code = ?, adr_state = ?, adr_city = ?, adr_neighborhood = ?, adr_street = ?, adr_number = ?, adr_complement = ? WHERE adr_id = ?;";
+        this.jdbcTemplate.update(sql,
+                address.getZipCode(),
+                address.getState(),
+                address.getCity(),
+                address.getNeighborhood(),
+                address.getStreet(),
+                address.getStreetNumber(),
+                address.getComplement().orElse(null),
+                address.getId()
+        );
+        return null;
+    }
+
     private final RowMapper<Address> addressRowMapper = (rs, rowNum) -> {
         Address addressRow = new Address();
         addressRow.setId(rs.getLong("adr_id"));

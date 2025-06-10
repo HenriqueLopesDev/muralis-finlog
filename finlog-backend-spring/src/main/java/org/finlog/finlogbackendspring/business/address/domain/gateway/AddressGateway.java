@@ -5,4 +5,5 @@ import org.finlog.finlogbackendspring.business.address.domain.entity.Address;
 public interface AddressGateway {
 
     Address saveAddress(Address address);
+    Void updateAddress(Address address);
 }

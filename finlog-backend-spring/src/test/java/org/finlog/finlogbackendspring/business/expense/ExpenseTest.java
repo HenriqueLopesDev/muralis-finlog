@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,7 +19,7 @@ public class ExpenseTest {
     private static final Long DEFAULT_ID = 99L;
     private static final String DEFAULT_DESCRIPTION = "Gasoline";
     private static final BigDecimal DEFAULT_VALUE = BigDecimal.valueOf(50.00);
-    private static final LocalDateTime DEFAULT_DATE = LocalDateTime.of(2025, 6, 7, 18, 30);
+    private static final LocalDate DEFAULT_DATE = LocalDate.of(2025, 6, 7);
     private static final boolean DEFAULT_ACTIVE = true;
 
     private PaymentType paymentType;

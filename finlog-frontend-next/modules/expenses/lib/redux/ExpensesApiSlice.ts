@@ -1,20 +1,61 @@
 import { apiSlice } from '@/common/lib/redux/apiSlice'
 import { CreateExpenseRequest, Expense, ExpenseList } from '../../types/Expense'
-import { PaginatedData, PaginatedResponse, SuccessResponse } from '@/common/types/api/ApiResponse'
+import {
+  PaginatedData,
+  PaginatedResponse,
+  SuccessResponse,
+} from '@/common/types/api/ApiResponse'
 import { ExpensesMapper } from '../../mappers/ExpensesMapper'
 
 const expensesMapper = new ExpensesMapper()
 
+interface ExpensesQueryParams {
+  page: number
+  minDate: string
+  maxDate: string
+}
+
 const expensesApiSlice = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    getExpenses: builder.query<PaginatedData<ExpenseList>, number>({
-      query: (page: number) => ({
-        url: `/despesas?page=${page}`,
+    getExpenses: builder.query<PaginatedData<ExpenseList>, ExpensesQueryParams>(
+      {
+        query: ({ page, minDate, maxDate }) => ({
+          url: '/despesas',
+          method: 'GET',
+          params: {
+            page,
+            startDate: minDate,
+            endDate: maxDate,
+          },
+        }),
+        transformResponse: (response: PaginatedResponse<Expense>) =>
+          expensesMapper.map(response),
+        providesTags: ['Expenses'],
+      },
+    ),
+
+    getExpenseById: builder.query<Expense, number>({
+      query: (expenseId) => ({
+        url: `/despesas/${expenseId}`,
         method: 'GET',
       }),
-      transformResponse: (response: PaginatedResponse<Expense>) =>
-        expensesMapper.map(response),
+      transformResponse: (response: SuccessResponse<Expense>) => response.data,
+    }),
+
+    getTotalExpensesValue: builder.query<
+      number,
+      Omit<ExpensesQueryParams, 'page'>
+    >({
+      query: ({ minDate, maxDate }) => ({
+        url: '/despesas/total',
+        method: 'GET',
+        params: {
+          startDate: minDate,
+          endDate: maxDate,
+        },
+      }),
+      transformResponse: (response: SuccessResponse<number>) => response.data,
       providesTags: ['Expenses'],
     }),
 
@@ -23,6 +64,18 @@ const expensesApiSlice = apiSlice.injectEndpoints({
         url: '/despesas',
         method: 'POST',
         body: expense,
+      }),
+      invalidatesTags: ['Expenses'],
+    }),
+
+    updateExpense: builder.mutation<
+      void,
+      { id: number; data: CreateExpenseRequest }
+    >({
+      query: ({ id, data }) => ({
+        url: `/despesas/${id}`,
+        method: 'PUT',
+        body: data,
       }),
       invalidatesTags: ['Expenses'],
     }),
@@ -41,4 +94,7 @@ export const {
   useGetExpensesQuery,
   useDeleteExpenseMutation,
   useCreateExpenseMutation,
+  useLazyGetExpenseByIdQuery,
+  useUpdateExpenseMutation,
+  useGetTotalExpensesValueQuery,
 } = expensesApiSlice
