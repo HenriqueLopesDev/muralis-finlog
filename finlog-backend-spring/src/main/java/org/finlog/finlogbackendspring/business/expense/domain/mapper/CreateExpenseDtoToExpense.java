@@ -7,7 +7,7 @@ import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.r
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.request.ExpenseCreateCategoryRequest;
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.request.ExpenseCreateRequest;
 import org.finlog.finlogbackendspring.business.paymentType.domain.entity.PaymentType;
-import org.finlog.finlogbackendspring.config.mapper.Mapper;
+import org.finlog.finlogbackendspring.config.domain.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

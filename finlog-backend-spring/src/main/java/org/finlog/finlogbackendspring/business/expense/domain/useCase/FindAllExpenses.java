@@ -2,12 +2,12 @@ package org.finlog.finlogbackendspring.business.expense.domain.useCase;
 
 import org.finlog.finlogbackendspring.business.expense.domain.entity.Expense;
 import org.finlog.finlogbackendspring.business.expense.domain.gateway.ExpenseGateway;
+import org.finlog.finlogbackendspring.config.domain.useCase.UseCase;
+import org.finlog.finlogbackendspring.config.pagination.PaginatedResult;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class FindAllExpenses {
+public class FindAllExpenses implements UseCase<Integer, PaginatedResult<Expense>> {
 
     private final ExpenseGateway expenseGateway;
 
@@ -15,7 +15,7 @@ public class FindAllExpenses {
         this.expenseGateway = expenseGateway;
     }
 
-    public List<Expense> execute() {
-        return this.expenseGateway.findAllExpenses();
+    public PaginatedResult<Expense> execute(Integer page) {
+        return this.expenseGateway.findAllExpenses(Math.max(page, 1));
     }
 }

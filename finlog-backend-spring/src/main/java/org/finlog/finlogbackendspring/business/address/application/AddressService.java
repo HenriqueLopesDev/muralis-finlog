@@ -4,7 +4,7 @@ import org.finlog.finlogbackendspring.business.address.domain.entity.Address;
 import org.finlog.finlogbackendspring.business.address.domain.mapper.AddressToAddressByCep;
 import org.finlog.finlogbackendspring.business.address.domain.useCase.FindAddressByZipCode;
 import org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.response.AddressByCep;
-import org.finlog.finlogbackendspring.config.mapper.Mapper;
+import org.finlog.finlogbackendspring.config.domain.mapper.Mapper;
 import org.springframework.stereotype.Service;
 
 @Service

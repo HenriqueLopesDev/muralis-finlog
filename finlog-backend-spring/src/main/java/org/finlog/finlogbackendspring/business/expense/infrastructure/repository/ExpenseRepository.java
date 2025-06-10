@@ -5,6 +5,7 @@ import org.finlog.finlogbackendspring.business.category.domain.entity.Category;
 import org.finlog.finlogbackendspring.business.expense.domain.entity.Expense;
 import org.finlog.finlogbackendspring.business.expense.domain.gateway.ExpenseGateway;
 import org.finlog.finlogbackendspring.business.paymentType.domain.entity.PaymentType;
+import org.finlog.finlogbackendspring.config.pagination.PaginatedResult;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,22 +17,51 @@ import java.util.List;
 public class ExpenseRepository implements ExpenseGateway {
 
     private final JdbcTemplate jdbcTemplate;
+    private final int PAGE_SIZE = 10;
 
     public ExpenseRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public List<Expense> findAllExpenses() {
-        String sql = "SELECT *, categories, payment_types, addresses " +
-                "FROM expenses " +
-                "JOIN categories " +
-                "ON expenses.exp_cat_id = categories.cat_id " +
-                "JOIN payment_types " +
-                "ON expenses.exp_pmt_id = payment_types.pmt_id " +
-                "JOIN addresses ON expenses.exp_adr_id = addresses.adr_id " +
-                "WHERE exp_active = true ORDER BY exp_id";
-        return jdbcTemplate.query(sql, this.expenseRowMapper);
+    public PaginatedResult<Expense> findAllExpenses(int page) {
+        int totalItems = this.countTotalExpenses();
+
+        if (totalItems == 0) {
+            return new PaginatedResult<>(List.of(), page, 0, 0);
+        }
+
+        int totalPages = (int) calculateTotalPages(totalItems);
+        List<Expense> content = fetchExpensesPage(page);
+
+        return new PaginatedResult<>(content, page, totalItems, totalPages);
+    }
+
+    private int countTotalExpenses() {
+        String countSql = "SELECT COUNT(*) FROM expenses WHERE exp_active = true";
+        Integer result = jdbcTemplate.queryForObject(countSql, Integer.class);
+        return result != null ? result : 0;
+    }
+
+    private double calculateTotalPages(double totalItems) {
+        return Math.ceil(totalItems / PAGE_SIZE);
+    }
+
+    private List<Expense> fetchExpensesPage(int page) {
+        int offset = (page - 1) * PAGE_SIZE;
+
+        String sql = """
+        SELECT *
+        FROM expenses
+        JOIN categories ON expenses.exp_cat_id = categories.cat_id
+        JOIN payment_types ON expenses.exp_pmt_id = payment_types.pmt_id
+        JOIN addresses ON expenses.exp_adr_id = addresses.adr_id
+        WHERE exp_active = true
+        ORDER BY exp_id
+        LIMIT ? OFFSET ?
+    """;
+
+        return jdbcTemplate.query(sql, this.expenseRowMapper, PAGE_SIZE, offset);
     }
 
     public Expense findExpenseById(Long id) throws DataAccessException {

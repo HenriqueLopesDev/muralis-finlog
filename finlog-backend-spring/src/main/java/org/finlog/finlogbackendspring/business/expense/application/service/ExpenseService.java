@@ -8,7 +8,10 @@ import org.finlog.finlogbackendspring.business.expense.domain.useCase.FindAllExp
 import org.finlog.finlogbackendspring.business.expense.domain.useCase.SaveExpense;
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.request.ExpenseCreateRequest;
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.response.ExpenseListDto;
-import org.finlog.finlogbackendspring.config.mapper.Mapper;
+import org.finlog.finlogbackendspring.config.domain.useCase.UseCase;
+import org.finlog.finlogbackendspring.config.pagination.PaginatedData;
+import org.finlog.finlogbackendspring.config.domain.mapper.Mapper;
+import org.finlog.finlogbackendspring.config.pagination.PaginatedResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +20,7 @@ import java.util.List;
 @Service
 public class ExpenseService {
 
-    private final FindAllExpenses findAllExpenses;
+    private final UseCase<Integer, PaginatedResult<Expense>> findAllExpenses;
     private final DeleteExpense deleteExpense;
     private final SaveExpense saveExpense;
     private final Mapper<ExpenseCreateRequest, Expense> createExpenseDtoExpense;
@@ -29,8 +32,19 @@ public class ExpenseService {
         this.createExpenseDtoExpense = createExpenseDtoToExpense;
     }
 
-    public List<ExpenseListDto> getAllExpenses() {
-        return findAllExpenses.execute().stream().map(new ExpenseToExpenseList()::map).toList();
+    public PaginatedData<ExpenseListDto> getAllExpenses(int page) {
+        PaginatedResult<Expense> expensePage = this.findAllExpenses.execute(page);
+
+        List<ExpenseListDto> mappedContent = expensePage.content().stream()
+                .map(new ExpenseToExpenseList()::map)
+                .toList();
+
+        return new PaginatedData<>(
+                mappedContent,
+                expensePage.currentPage(),
+                expensePage.totalPages(),
+                expensePage.totalItems()
+        );
     }
 
     public void deleteExpense(Long id) {

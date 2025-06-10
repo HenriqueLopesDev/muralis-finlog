@@ -2,7 +2,7 @@ package org.finlog.finlogbackendspring.business.address.domain.mapper;
 
 import org.finlog.finlogbackendspring.business.address.domain.entity.Address;
 import org.finlog.finlogbackendspring.business.address.infrastructure.http.dto.response.AddressByCep;
-import org.finlog.finlogbackendspring.config.mapper.Mapper;
+import org.finlog.finlogbackendspring.config.domain.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -12,12 +12,12 @@ import org.finlog.finlogbackendspring.business.expense.application.service.Expen
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.request.ExpenseCreateRequest;
 import org.finlog.finlogbackendspring.business.expense.infrastructure.http.dto.response.ExpenseListDto;
 import org.finlog.finlogbackendspring.config.http.response.ErrorResponse;
+import org.finlog.finlogbackendspring.config.pagination.PaginatedData;
+import org.finlog.finlogbackendspring.config.http.response.PaginatedResponse;
 import org.finlog.finlogbackendspring.config.http.response.SuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/despesas")
@@ -32,9 +32,9 @@ public class ExpenseController {
 
     @GetMapping()
     @Operation(summary = "Get all expenses", description = "Retrieves a list of all recorded expenses.")
-    public ResponseEntity<SuccessResponse<List<ExpenseListDto>>> getAllExpenses() {
+    public ResponseEntity<PaginatedResponse<PaginatedData<ExpenseListDto>>> getAllExpenses(@RequestParam(defaultValue = "1") int page) {
         return ResponseEntity.ok().body(
-                new SuccessResponse<>(this.expenseService.getAllExpenses())
+                new PaginatedResponse<>(this.expenseService.getAllExpenses(page))
         );
     }
 
