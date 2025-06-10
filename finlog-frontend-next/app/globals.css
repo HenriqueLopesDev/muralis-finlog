@@ -47,6 +47,20 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-01);
+  border-radius: 20px;
+  border: 3px solid #fff;
+}
+
 .colored-toast{
   padding: 0.5rem 0.25rem !important;
 }

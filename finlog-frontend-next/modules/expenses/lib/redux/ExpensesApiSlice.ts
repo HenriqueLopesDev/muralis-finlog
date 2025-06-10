@@ -1,6 +1,6 @@
 import { apiSlice } from '@/common/lib/redux/apiSlice'
 import { CreateExpenseRequest, Expense, ExpenseList } from '../../types/Expense'
-import { SuccessResponse } from '@/common/types/api/ApiResponse'
+import { PaginatedData, PaginatedResponse, SuccessResponse } from '@/common/types/api/ApiResponse'
 import { ExpensesMapper } from '../../mappers/ExpensesMapper'
 
 const expensesMapper = new ExpensesMapper()
@@ -8,13 +8,13 @@ const expensesMapper = new ExpensesMapper()
 const expensesApiSlice = apiSlice.injectEndpoints({
   overrideExisting: true,
   endpoints: (builder) => ({
-    getExpenses: builder.query<ExpenseList[], void>({
-      query: () => ({
-        url: '/despesas',
+    getExpenses: builder.query<PaginatedData<ExpenseList>, number>({
+      query: (page: number) => ({
+        url: `/despesas?page=${page}`,
         method: 'GET',
       }),
-      transformResponse: (response: SuccessResponse<Expense[]>) =>
-        response.data.map((expense) => expensesMapper.map(expense)),
+      transformResponse: (response: PaginatedResponse<Expense>) =>
+        expensesMapper.map(response),
       providesTags: ['Expenses'],
     }),
 
