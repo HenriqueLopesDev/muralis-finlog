@@ -14,6 +14,7 @@ import { LoadingSpinner } from '@/common/components/LoadingSpinner/LoadingSpinne
 import React from 'react'
 import { ActionAlert } from '@/common/utils/ActionAlert'
 import { DeleteExpenseModal } from '../components/DeleteExpenseModal/DeleteExpenseModal'
+import { CreateExpenseModal } from '../components/CreateExpenseModal/CreateExpenseModal'
 
 export function Expenses() {
   const { data: expenses, isLoading } = useGetExpensesQuery()
@@ -23,6 +24,9 @@ export function Expenses() {
     open: false,
     expenseId: 0,
   })
+
+  const [createExpenseModalState, setCreateExpenseModalState] =
+    React.useState(false)
 
   if (isLoading) {
     return <LoadingSpinner />
@@ -64,7 +68,7 @@ export function Expenses() {
               Buscar
             </button>
           </form>
-          <BaseButton>
+          <BaseButton onClick={() => setCreateExpenseModalState(true)}>
             <AddCircleOutlineIcon />
             Nova despesa
           </BaseButton>
@@ -86,6 +90,10 @@ export function Expenses() {
         open={deleteExpenseModalState}
         setOpen={setDeleteExpenseModalState}
         callBackFn={handleDeleteExpense}
+      />
+      <CreateExpenseModal
+        open={createExpenseModalState}
+        setOpen={setCreateExpenseModalState}
       />
     </div>
   )

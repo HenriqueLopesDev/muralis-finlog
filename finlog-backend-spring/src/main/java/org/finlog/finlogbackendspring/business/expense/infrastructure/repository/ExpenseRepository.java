@@ -30,7 +30,7 @@ public class ExpenseRepository implements ExpenseGateway {
                 "JOIN payment_types " +
                 "ON expenses.exp_pmt_id = payment_types.pmt_id " +
                 "JOIN addresses ON expenses.exp_adr_id = addresses.adr_id " +
-                "WHERE exp_active = true";
+                "WHERE exp_active = true ORDER BY exp_id";
         return jdbcTemplate.query(sql, this.expenseRowMapper);
     }
 
