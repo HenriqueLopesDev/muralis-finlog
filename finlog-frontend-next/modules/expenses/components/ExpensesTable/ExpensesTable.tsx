@@ -22,6 +22,7 @@ import { ExpensesTableProps } from './ExpensesTableProps'
 export function ExpensesTable({
   rows,
   deleteExpenseModalDispatcher,
+  updateExpenseModalDispatcher,
 }: ExpensesTableProps) {
   return (
     <TableContainer component={Paper} sx={TableContainerStyles}>
@@ -38,6 +39,13 @@ export function ExpensesTable({
           </TableRow>
         </TableHead>
         <TableBody>
+          {rows.length === 0 && (
+            <StyledTableRow>
+              <StyledTableCell colSpan={7} align="center">
+                <p className="text-[1rem] my-2">Nenhuma despesa encontrada.</p>
+              </StyledTableCell>
+            </StyledTableRow>
+          )}
           {rows.map((row) => (
             <StyledTableRow key={row.id}>
               <StyledTableCell component="th" scope="row" align="center">
@@ -70,10 +78,14 @@ export function ExpensesTable({
                     horizontal: 'right',
                   }}
                 >
-                  <Dropdown.Item onClickCallback={() => null}>
-                    Visualizar
-                  </Dropdown.Item>
-                  <Dropdown.Item onClickCallback={() => null}>
+                  <Dropdown.Item
+                    onClickCallback={() =>
+                      updateExpenseModalDispatcher({
+                        open: true,
+                        expenseId: row.id,
+                      })
+                    }
+                  >
                     Editar
                   </Dropdown.Item>
                   <Dropdown.Item

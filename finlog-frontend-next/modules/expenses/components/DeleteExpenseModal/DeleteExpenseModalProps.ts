@@ -1,13 +1,12 @@
 export interface DeleteExpenseModalProps {
-  open: {
+  deleteModalState: {
     open: boolean
     expenseId: number
   }
-  setOpen: React.Dispatch<
+  setDeleteModalState: React.Dispatch<
     React.SetStateAction<{
       open: boolean
       expenseId: number
     }>
   >
-  callBackFn: () => void
 }

@@ -2,28 +2,55 @@
 
 import { Divider } from '@mui/material'
 import { ExpensesTable } from '../components/ExpensesTable/ExpensesTable'
-import { BaseInput } from '@/common/components/BaseInput/BaseInput'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { BaseButton } from '@/common/components/BaseButton/BaseButton'
 import { MainPagination } from '@/common/components/BasePagination/BasePagination'
 import {
-  useDeleteExpenseMutation,
   useGetExpensesQuery,
+  useGetTotalExpensesValueQuery,
 } from '@/modules/expenses/lib/redux/ExpensesApiSlice'
 import { LoadingSpinner } from '@/common/components/LoadingSpinner/LoadingSpinner'
 import React from 'react'
-import { ActionAlert } from '@/common/utils/ActionAlert'
 import { DeleteExpenseModal } from '../components/DeleteExpenseModal/DeleteExpenseModal'
 import { CreateExpenseModal } from '../components/CreateExpenseModal/CreateExpenseModal'
 import { PaginationMeta } from '@/common/types/api/ApiResponse'
+import { DateFilter } from '../components/DateFilter/DateFIlter'
+import { UpdateExpenseModal } from '../components/UpdateExpenseModal/UpdateExpenseModal'
+import { formatToBrazilianCurrency } from '@/common/utils/formatters'
 
 export function Expenses() {
+  const initialDates = React.useMemo(() => {
+    const today = new Date()
+    const yyyy = today.getFullYear()
+    const mm = String(today.getMonth() + 1).padStart(2, '0')
+    const dd = String(today.getDate()).padStart(2, '0')
+
+    const firstDayOfMonth = `${yyyy}-${mm}-01`
+    const currentDay = `${yyyy}-${mm}-${dd}`
+
+    return {
+      minDate: firstDayOfMonth,
+      maxDate: currentDay,
+    }
+  }, [])
+
   const [paginationData, setPaginationData] = React.useState<PaginationMeta>()
-  const { data: expenses, isLoading } = useGetExpensesQuery(paginationData?.currentPage ?? 1, {
-  refetchOnMountOrArgChange: true,
+  const [filterDates, setFilterDates] = React.useState(initialDates)
+  const { data: totalValue } = useGetTotalExpensesValueQuery({
+    minDate: filterDates.minDate,
+    maxDate: filterDates.maxDate,
   })
-  const [deleteExpenseMutation] = useDeleteExpenseMutation()
-  
+  const { data: expenses, isLoading } = useGetExpensesQuery(
+    {
+      page: paginationData?.currentPage ?? 1,
+      minDate: filterDates.minDate,
+      maxDate: filterDates.maxDate,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    },
+  )
+
   const [deleteExpenseModalState, setDeleteExpenseModalState] = React.useState({
     open: false,
     expenseId: 0,
@@ -31,6 +58,14 @@ export function Expenses() {
 
   const [createExpenseModalState, setCreateExpenseModalState] =
     React.useState(false)
+
+  const [updateExpenseModalState, setUpdateExpenseModalState] = React.useState<{
+    open: boolean
+    expenseId: number | undefined
+  }>({
+    open: false,
+    expenseId: undefined,
+  })
 
   React.useEffect(() => {
     if (expenses?.pagination) {
@@ -42,24 +77,6 @@ export function Expenses() {
     return <LoadingSpinner />
   }
 
-  const handleDeleteExpense = async () => {
-    const { error } = await deleteExpenseMutation(
-      deleteExpenseModalState.expenseId,
-    )
-
-    if (error) {
-      return await ActionAlert.show({
-        icon: 'error',
-        title: 'Erro ao excluir despesa, tente novamente mais tarde.',
-      })
-    }
-
-    await ActionAlert.show({
-      icon: 'success',
-      title: 'Despesa excluída com sucesso!',
-    })
-  }
-
   return (
     <div className="flex flex-col justify-between w-full">
       <div className="flex flex-col gap-3">
@@ -67,18 +84,22 @@ export function Expenses() {
           <h2 className="text-[14px] uppercase font-medium">
             Total de despesas:{' '}
           </h2>
-          <span className="text-[18px] uppercase font-medium">R$ 0,00</span>
+          <span className="text-[18px] uppercase font-medium">
+            {formatToBrazilianCurrency(totalValue ?? 0)}
+          </span>
         </div>
         <Divider />
-        <div className="flex gap-2 justify-between items-center">
-          <form>
-            <BaseInput type="date" />
-            <BaseInput type="date" />
-            <button className="bg-blue-500 text-white rounded p-2">
-              Buscar
-            </button>
-          </form>
-          <BaseButton onClick={() => setCreateExpenseModalState(true)}>
+        <div className="flex gap-2 justify-between items-center max-[768px]:flex-col max-[768px]:justify-start max-[768px]:items-start">
+          <DateFilter
+            setPaginationData={setPaginationData}
+            setFilterDates={setFilterDates}
+            minDate={filterDates.minDate}
+            maxDate={filterDates.maxDate}
+          />
+          <BaseButton
+            onClick={() => setCreateExpenseModalState(true)}
+            className="h-[38px]"
+          >
             <AddCircleOutlineIcon />
             Nova despesa
           </BaseButton>
@@ -87,6 +108,7 @@ export function Expenses() {
           <ExpensesTable
             rows={expenses?.content ?? []}
             deleteExpenseModalDispatcher={setDeleteExpenseModalState}
+            updateExpenseModalDispatcher={setUpdateExpenseModalState}
           />
         </div>
       </div>
@@ -97,13 +119,16 @@ export function Expenses() {
         />
       </div>
       <DeleteExpenseModal
-        open={deleteExpenseModalState}
-        setOpen={setDeleteExpenseModalState}
-        callBackFn={handleDeleteExpense}
+        deleteModalState={deleteExpenseModalState}
+        setDeleteModalState={setDeleteExpenseModalState}
       />
       <CreateExpenseModal
-        open={createExpenseModalState}
-        setOpen={setCreateExpenseModalState}
+        createExpenseModalState={createExpenseModalState}
+        setCreateExpenseModalState={setCreateExpenseModalState}
+      />
+      <UpdateExpenseModal
+        updateExpenseModalState={updateExpenseModalState}
+        setUpdateExpenseModalState={setUpdateExpenseModalState}
       />
     </div>
   )

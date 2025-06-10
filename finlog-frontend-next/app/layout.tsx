@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${montserrat.variable} ${poppins.variable} px-18 py-16  flex items-center justify-center`}
+        className={`${montserrat.variable} ${poppins.variable} px-18 py-16  flex items-center justify-center max-[1200px]:px-14 max-[1200px]:py-12 max-[992px]:px-10 max-[992px]:py-8`}
       >
         <StoreProvider>
           <AppRouterCacheProvider>

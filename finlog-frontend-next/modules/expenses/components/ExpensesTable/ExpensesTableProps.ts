@@ -8,4 +8,10 @@ export interface ExpensesTableProps {
       expenseId: number
     }>
   >
+  updateExpenseModalDispatcher: React.Dispatch<
+    React.SetStateAction<{
+      open: boolean
+      expenseId: number | undefined
+    }>
+  >
 }

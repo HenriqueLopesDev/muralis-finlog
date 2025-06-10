@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record ExpenseCreateRequest(
         @NotBlank(message = "Description is required")
@@ -18,7 +18,7 @@ public record ExpenseCreateRequest(
 
         @NotNull(message = "Date is required")
         @PastOrPresent(message = "Date must be in the past or present")
-        LocalDateTime date,
+        LocalDate date,
 
         @NotNull(message = "Payment type ID is required")
         @Positive(message = "Payment type ID must be a positive number")

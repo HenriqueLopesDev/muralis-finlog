@@ -1,5 +1,5 @@
 export interface CreateExpenseModalProps {
-  open: boolean
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  createExpenseModalState: boolean
+  setCreateExpenseModalState: React.Dispatch<React.SetStateAction<boolean>>
   callBackFn?: () => void
 }
