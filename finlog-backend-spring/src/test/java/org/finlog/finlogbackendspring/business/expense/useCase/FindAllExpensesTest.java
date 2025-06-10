@@ -6,6 +6,7 @@ import org.finlog.finlogbackendspring.business.expense.domain.entity.Expense;
 import org.finlog.finlogbackendspring.business.expense.domain.gateway.ExpenseGateway;
 import org.finlog.finlogbackendspring.business.expense.domain.useCase.FindAllExpenses;
 import org.finlog.finlogbackendspring.business.paymentType.domain.entity.PaymentType;
+import org.finlog.finlogbackendspring.config.pagination.PaginatedResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,44 +29,41 @@ public class FindAllExpensesTest {
     }
 
     @Test
-    void shouldReturnListOfExpenses() {
+    void shouldReturnPaginatedExpenses() {
+        Expense expense = new Expense();
 
-        PaymentType paymentType = new PaymentType(1L, "Pix");
-        Category category = new Category(2L, "Transport", "Fuel");
-        Address address = new Address(
-                3L,
-                "00000000",
-                "SP",
-                "São Paulo",
-                "Neighborhood one",
-                "Street one",
-                "123",
-                "Complement one"
-        );
+        List<Expense> expenses = List.of(expense);
 
-        List<Expense> expenses = List.of(
-                new Expense(1L, "Gas Station", BigDecimal.valueOf(100.00), LocalDateTime.now(), paymentType, category, address, true),
-                new Expense(2L, "Uber Ride", BigDecimal.valueOf(50.00), LocalDateTime.now(), paymentType, category, address, true)
-        );
+        PaginatedResult<Expense> paginated = new PaginatedResult<>(expenses, 1, 1, 1);
 
-        when(this.expenseGateway.findAllExpenses()).thenReturn(expenses);
+        when(this.expenseGateway.findAllExpenses(1)).thenReturn(paginated);
 
-        List<Expense> result = this.findAllExpenses.execute();
+        PaginatedResult<Expense> result = this.findAllExpenses.execute(1);
 
-        assertEquals(2, result.size());
         assertNotNull(result);
-        assertFalse(result.isEmpty());
-        verify(this.expenseGateway, times(1)).findAllExpenses();
+        assertEquals(1, result.content().size());
+        assertEquals(1, result.currentPage());
+        assertEquals(1, result.totalPages());
+        assertEquals(1, result.totalItems());
+
+        verify(this.expenseGateway, times(1)).findAllExpenses(1);
     }
 
     @Test
-    void shouldReturnEmptyListWhenNoExpensesFound() {
-        when(this.expenseGateway.findAllExpenses()).thenReturn(List.of());
+    void shouldReturnEmptyPaginatedResultWhenNoExpensesFound() {
+        PaginatedResult<Expense> emptyResult = new PaginatedResult<>(List.of(), 1, 0, 0);
 
-        List<Expense> result = this.findAllExpenses.execute();
+        when(this.expenseGateway.findAllExpenses(1)).thenReturn(emptyResult);
 
-        assertTrue(result.isEmpty());
-        verify(this.expenseGateway, times(1)).findAllExpenses();
+        PaginatedResult<Expense> result = this.findAllExpenses.execute(1);
+
+        assertNotNull(result);
+        assertTrue(result.content().isEmpty());
+        assertEquals(0, result.totalItems());
+        assertEquals(0, result.totalPages());
+        assertEquals(1, result.currentPage());
+
+        verify(this.expenseGateway, times(1)).findAllExpenses(1);
     }
 
 }
