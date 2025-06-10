@@ -2,7 +2,7 @@
 
 ### Sumário
 
-1. [Pré requisitos](#pré-requisitos)
+1. [Pré-requisitos](#pré-requisitos)
 2. [Introdução](#introdução)
 3. [Tecnologias utilizadas](#tecnologias-utilizadas)
 4. [Resultados do Lighthouse](#resultados-do-lighthouse)
