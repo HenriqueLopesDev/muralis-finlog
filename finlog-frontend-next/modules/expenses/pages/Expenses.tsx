@@ -4,7 +4,7 @@ import { Divider } from '@mui/material'
 import { ExpensesTable } from '../components/ExpensesTable/ExpensesTable'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { BaseButton } from '@/common/components/BaseButton/BaseButton'
-import { MainPagination } from '@/common/components/BasePagination/BasePagination'
+import { BasePagination } from '@/common/components/BasePagination/BasePagination'
 import {
   useGetExpensesQuery,
   useGetTotalExpensesValueQuery,
@@ -80,7 +80,7 @@ export function Expenses() {
   return (
     <div className="flex flex-col justify-between w-full">
       <div className="flex flex-col gap-3">
-        <div className="font-montserrat flex gap-2 items-center">
+        <div className="font-montserrat flex gap-2 items-center max-[768px]:justify-center">
           <h2 className="text-[14px] uppercase font-medium">
             Total de despesas:{' '}
           </h2>
@@ -112,8 +112,8 @@ export function Expenses() {
           />
         </div>
       </div>
-      <div className=" flex justify-end">
-        <MainPagination
+      <div className=" flex justify-end max-[768px]:justify-center">
+        <BasePagination
           pagination={paginationData}
           setPaginationData={setPaginationData}
         />

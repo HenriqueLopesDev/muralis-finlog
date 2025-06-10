@@ -1,12 +1,9 @@
 import { PaginationMeta } from '@/common/types/api/ApiResponse'
 import React from 'react'
 
-interface PaginationProps {
-  last_page: number
-  currentPage: number
-}
-
-export interface MainPaginationProps {
+export interface BasePaginationProps {
   pagination: PaginationMeta | undefined
-  setPaginationData: React.Dispatch<React.SetStateAction<PaginationMeta | undefined>>
+  setPaginationData: React.Dispatch<
+    React.SetStateAction<PaginationMeta | undefined>
+  >
 }
